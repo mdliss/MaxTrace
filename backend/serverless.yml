@@ -1,0 +1,136 @@
+service: innergy-blueprint-detection
+
+provider:
+  name: aws
+  runtime: python3.9
+  stage: ${opt:stage, 'dev'}
+  region: ${opt:region, 'us-east-1'}
+  environment:
+    BUCKET_NAME: innergy-blueprints-${self:provider.stage}
+    SAGEMAKER_ENDPOINT: ${env:SAGEMAKER_ENDPOINT, 'yolov5-blueprint-detector'}
+    MODEL_VERSION: yolov5-v1.0
+    SAGEMAKER_MAX_RETRIES: ${env:SAGEMAKER_MAX_RETRIES, '3'}
+    SAGEMAKER_RETRY_DELAY: ${env:SAGEMAKER_RETRY_DELAY, '1.0'}
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - s3:PutObject
+            - s3:GetObject
+            - s3:DeleteObject
+          Resource:
+            - arn:aws:s3:::innergy-blueprints-${self:provider.stage}/*
+        - Effect: Allow
+          Action:
+            - sagemaker:InvokeEndpoint
+          Resource:
+            - arn:aws:sagemaker:${self:provider.region}:*:endpoint/yolov5-blueprint-detector
+
+functions:
+  uploadHandler:
+    handler: functions/upload_handler.lambda_handler
+    description: Handles blueprint uploads and generates presigned URLs
+    timeout: 30
+    memorySize: 256
+    events:
+      - http:
+          path: upload
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+            allowCredentials: false
+      - http:
+          path: upload
+          method: options
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+            allowCredentials: false
+
+  inferenceHandler:
+    handler: functions/inference_handler.lambda_handler
+    description: Triggers SageMaker inference for blueprint detection
+    timeout: 60
+    memorySize: 512
+    events:
+      - http:
+          path: detect
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+            allowCredentials: false
+
+  resultsHandler:
+    handler: functions/results_handler.lambda_handler
+    description: Retrieves detection results for a blueprint
+    timeout: 30
+    memorySize: 256
+    events:
+      - http:
+          path: results/{blueprintId}
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Amz-Date
+              - Authorization
+              - X-Api-Key
+              - X-Amz-Security-Token
+            allowCredentials: false
+          request:
+            parameters:
+              paths:
+                blueprintId: true
+
+resources:
+  Resources:
+    BlueprintsBucket:
+      Type: AWS::S3::Bucket
+      Properties:
+        BucketName: innergy-blueprints-${self:provider.stage}
+        CorsConfiguration:
+          CorsRules:
+            - AllowedOrigins:
+                - '*'
+              AllowedHeaders:
+                - '*'
+              AllowedMethods:
+                - GET
+                - PUT
+                - POST
+                - DELETE
+                - HEAD
+              MaxAge: 3000
+        LifecycleConfiguration:
+          Rules:
+            - Id: DeleteOldBlueprints
+              Status: Enabled
+              ExpirationInDays: 7
+              Prefix: uploads/
+
+plugins:
+  - serverless-python-requirements
+
+custom:
+  pythonRequirements:
+    dockerizePip: true
+    slim: true

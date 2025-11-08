@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__task-master-ai__set_task_status",
+      "mcp__task-master-ai__update_subtask",
+      "Bash(mkdir:*)",
+      "mcp__task-master-ai__expand_task",
+      "mcp__task-master-ai__analyze_project_complexity",
+      "mcp__task-master-ai__scope_down_task",
+      "mcp__task-master-ai__add_task",
+      "mcp__task-master-ai__update_task",
+      "Bash(task-master set-status:*)",
+      "Bash(npm run build:*)",
+      "Bash(tree:*)",
+      "Bash(aws sts get-caller-identity:*)",
+      "Bash(task-master show:*)",
+      "Bash(aws s3 sync:*)",
+      "Bash(task-master update-subtask:*)",
+      "Bash(curl:*)",
+      "Bash(task-master next)",
+      "Bash(task-master add-task:*)",
+      "Bash(task-master update-task:*)",
+      "Bash(task-master list:*)",
+      "Bash(task-master expand:*)",
+      "Bash(aws iam get-role:*)",
+      "Bash(chmod:*)"
+    ],
+    "deny": [],
+    "ask": []
+  },
+  "enableAllProjectMcpServers": true,
+  "enabledMcpjsonServers": [
+    "task-master-ai"
+  ]
+}

@@ -1,0 +1,37 @@
+{
+	"meta": {
+		"generatedAt": "2025-11-08T07:41:57.804Z",
+		"tasksAnalyzed": 3,
+		"totalTasks": 12,
+		"analysisCount": 3,
+		"thresholdScore": 7,
+		"projectName": "Taskmaster",
+		"usedResearch": false
+	},
+	"complexityAnalysis": [
+		{
+			"taskId": 10,
+			"taskTitle": "Basic Deployment of Frontend and Backend",
+			"complexityScore": 5,
+			"recommendedSubtasks": 2,
+			"expansionPrompt": "Break down the smoke test into specific steps for frontend and backend verification, including URL access, file upload, and backend processing checks.",
+			"reasoning": "This task involves verifying the deployment of both frontend and backend systems, which requires coordination and testing across different components. Dependencies on tasks 11 and 12 add complexity, as successful deployment of both is necessary. Testing involves multiple steps, including accessing URLs and verifying backend processing."
+		},
+		{
+			"taskId": 11,
+			"taskTitle": "Deploy Frontend to S3",
+			"complexityScore": 4,
+			"recommendedSubtasks": 3,
+			"expansionPrompt": "Detail the steps for building the React application, configuring S3 for static hosting, and verifying public access.",
+			"reasoning": "Deploying a React application to S3 involves several steps, including building the application, configuring S3 for static hosting, and ensuring public access. While not overly complex, it requires attention to detail and proper configuration to ensure accessibility and performance."
+		},
+		{
+			"taskId": 12,
+			"taskTitle": "Deploy Backend to AWS Lambda",
+			"complexityScore": 6,
+			"recommendedSubtasks": 4,
+			"expansionPrompt": "Outline the steps for deploying Lambda functions, configuring API Gateway, setting up CORS, and testing the deployment.",
+			"reasoning": "Deploying backend services to AWS Lambda with API Gateway involves multiple technical challenges, including configuring Lambda functions, setting up API Gateway, and ensuring CORS is correctly configured. The task is more complex due to the need for integration and testing of serverless components."
+		}
+	]
+}

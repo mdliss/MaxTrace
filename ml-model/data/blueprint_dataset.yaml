@@ -1,0 +1,42 @@
+# Blueprint Room Detection Dataset Configuration
+# YOLOv5 Dataset Format
+
+# Dataset paths (update these with your actual dataset paths)
+path: ./data/blueprints  # dataset root dir
+train: images/train      # train images (relative to 'path')
+val: images/val          # val images (relative to 'path')
+test: images/test        # test images (optional)
+
+# Classes - Architectural Elements Detection
+nc: 7  # number of classes
+names:
+  - 'wall'        # Class 0: Wall segments
+  - 'door'        # Class 1: Doors and doorways
+  - 'window'      # Class 2: Windows
+  - 'room'        # Class 3: Room boundaries
+  - 'stair'       # Class 4: Staircases
+  - 'furniture'   # Class 5: Built-in furniture
+  - 'fixture'     # Class 6: Plumbing/electrical fixtures
+
+# Notes:
+# 1. Dataset should be in YOLO format with the following structure:
+#    data/blueprints/
+#    ├── images/
+#    │   ├── train/
+#    │   ├── val/
+#    │   └── test/
+#    └── labels/
+#        ├── train/
+#        ├── val/
+#        └── test/
+#
+# 2. Each image should have a corresponding .txt file with annotations
+# 3. Annotation format: <class> <x_center> <y_center> <width> <height>
+#    - All values are normalized (0-1)
+#    - Example: 0 0.5 0.5 0.3 0.4
+#
+# 4. To create a dataset:
+#    - Collect blueprint images (PNG/JPG)
+#    - Use a tool like LabelImg or Roboflow to annotate room boundaries
+#    - Export in YOLO format
+#    - Recommended minimum: 100+ annotated blueprints
